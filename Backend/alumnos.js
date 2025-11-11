@@ -23,7 +23,7 @@ router.post(
     const { nombre, apellido, dni } = req.body;
 
     try {
-      // Verificamos que el DNI no esté en uso
+      // Verificamos que el DNI no este en uso
       const [alumnos] = await db.execute(
         "SELECT * FROM alumnos WHERE dni=?",
         [dni]
@@ -31,7 +31,7 @@ router.post(
       if (alumnos.length > 0) {
         return res
           .status(400)
-          .json({ success: false, error: "El DNI ya está registrado" });
+          .json({ success: false, error: "El DNI ya esta registrado" });
       }
 
       // Insertamos
@@ -90,7 +90,7 @@ router.get(
   }
 );
 
-// PUT /alumnos/:id (Actualizar un alumno)
+// PUT /alumnos/:id Actualizar un alumno
 router.put(
   "/:id",
   verificarAutenticacion,
@@ -102,7 +102,7 @@ router.put(
     const { nombre, apellido, dni } = req.body;
 
     try {
-      // Verificar que el DNI nuevo no choque con OTRO alumno
+      // Verificar que el DNI nuevo no choque con otro alumno
       const [alumnos] = await db.execute(
         "SELECT * FROM alumnos WHERE dni=? AND id!=?",
         [dni, id]
@@ -110,7 +110,7 @@ router.put(
       if (alumnos.length > 0) {
         return res
           .status(400)
-          .json({ success: false, error: "El DNI ya está en uso por otro alumno" });
+          .json({ success: false, error: "El DNI ya esta en uso por otro alumno" });
       }
 
       // Actualizamos

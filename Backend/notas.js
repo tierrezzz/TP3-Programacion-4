@@ -6,7 +6,7 @@ import { body } from "express-validator";
 
 const router = express.Router();
 
-// --- Validaciones para el body (al crear) ---
+// --- Validaciones para el body ---
 const validacionesCrearNota = [
   body("alumno_id", "El ID de alumno es obligatorio").isInt({ min: 1 }),
   body("materia_id", "El ID de materia es obligatorio").isInt({ min: 1 }),
@@ -25,7 +25,7 @@ const validacionesCrearNota = [
     .withMessage("La nota 3 debe estar entre 1 y 10"),
 ];
 
-// --- Validaciones para el body (al actualizar) ---
+// --- Validaciones para el body  ---
 // Al actualizar, no permitimos cambiar el alumno o la materia, solo las notas.
 const validacionesActualizarNota = [
   body("nota1")
@@ -42,7 +42,7 @@ const validacionesActualizarNota = [
     .withMessage("La nota 3 debe estar entre 1 y 10"),
 ];
 
-// POST /notas (Asignar/Cargar notas)
+// POST /notas Asignar-Cargar notas
 router.post(
   "/",
   verificarAutenticacion,
@@ -83,7 +83,7 @@ router.post(
   }
 );
 
-// GET /notas (Listar todas las notas con info de alumno y materia)
+// GET /notas Listar todas las notas con info de alumno y materia
 router.get("/", verificarAutenticacion, async (req, res) => {
   try {
     // Usamos JOINs para traer la informacion util
@@ -111,7 +111,7 @@ router.get("/", verificarAutenticacion, async (req, res) => {
   }
 });
 
-// GET /notas/:id (Ver una entrada de nota especifica)
+// GET /notas/:id  Ver una entrada de nota especifica
 router.get(
   "/:id",
   verificarAutenticacion,
@@ -137,7 +137,7 @@ router.get(
   }
 );
 
-// PUT /notas/:id (Actualizar solo las notas de un registro)
+// PUT /notas/:id  Actualizar solo las notas de un registro
 router.put(
   "/:id",
   verificarAutenticacion,
@@ -171,7 +171,7 @@ router.put(
   }
 );
 
-// DELETE /notas/:id (Eliminar un registro de nota)
+// DELETE /notas/:id  Eliminar un registro de nota
 router.delete(
   "/:id",
   verificarAutenticacion,

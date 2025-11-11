@@ -1,24 +1,16 @@
 import express from "express";
 import { db } from "./db.js";
-import { verificarValidaciones } from "./validaciones.js";
+import { validarId, verificarValidaciones } from "./validaciones.js";
 import { body } from "express-validator";
 import bcrypt from "bcrypt";
-// Importamos esto para proteger rutas en el futuro, aunque el registro es público
 import { verificarAutenticacion } from "./auth.js";
 
 const router = express.Router();
 
-// GET /usuarios (Listar todos los usuarios)
+// GET /usuarios Listar todos los usuarios
 router.get("/", verificarAutenticacion, async (req, res) => {
   try {
-    // El middleware 'verificarAutenticacion' ya corrió.
-    // Si llegamos aquí, el token es válido.
-    
-    // Opcional: El payload del token está en req.user
-    // console.log("Usuario autenticado:", req.user); // { userId: 1 }
-
     const [rows] = await db.execute(
-      // No enviamos la contraseña, ni encriptada.
       "SELECT id, username, email FROM usuarios"
     );
 
@@ -33,14 +25,12 @@ router.get("/", verificarAutenticacion, async (req, res) => {
   }
 });
 
-// POST /usuarios (Registro de usuario)
-// Esta ruta es pública, no necesita 'verificarAutenticacion'
+// POST /usuarios Registro de usuario
 router.post(
   "/",
-  // Validaciones ajustadas a tu tabla
   body("email", "Email inválido").isEmail(),
-  body("username", "Nombre de usuario inválido").notEmpty().isLength({ max: 50 }), // Cambiado de 'nombre'
-  body("password", "Contraseña inválida (mín. 8 caracteres, 1 número)").isStrongPassword({
+  body("username", "Nombre de usuario invalido").notEmpty().isLength({ max: 50 }), 
+  body("password", "Contraseña invalida (mín. 8 caracteres, 1 numero)").isStrongPassword({
     minLength: 8,
     minLowercase: 1,
     minUppercase: 0,
@@ -50,9 +40,9 @@ router.post(
   verificarValidaciones,
   async (req, res) => {
     try {
-      const { email, username, password } = req.body; // Cambiado de 'nombre'
+      const { email, username, password } = req.body; 
 
-      // Opcional: Verificar si el email ya existe (esto está bien)
+      // Verificar si el email ya existe
       const [emails] = await db.execute(
         "SELECT * FROM usuarios WHERE email=?",
         [email]
@@ -63,7 +53,7 @@ router.post(
           .json({ success: false, error: "El email ya está registrado" });
       }
 
-      // Opcional: Verificar si el username ya existe
+      // Verificar si el username ya existe
        const [usernames] = await db.execute(
         "SELECT * FROM usuarios WHERE username=?",
         [username]
@@ -74,20 +64,18 @@ router.post(
           .json({ success: false, error: "El nombre de usuario ya está registrado" });
       }
       
-      // 1. Encriptar contraseña
+      // Encriptar contraseña
       const hashedPassword = await bcrypt.hash(password, 12);
 
-      // 2. Guardar en la base de datos (¡LA CONSULTA CORREGIDA!)
+      // Guardar en la base de datos (¡LA CONSULTA CORREGIDA!)
       const [result] = await db.execute(
-        // Usamos los nombres de columna de tu SQL: 'email', 'username', 'password'
         "INSERT INTO usuarios (email, username, password) VALUES (?,?,?)",
-        [email, username, hashedPassword] // El hashedPassword va a la columna 'password'
+        [email, username, hashedPassword]
       );
 
-      // 3. Responder
       res.status(201).json({
         success: true,
-        data: { id: result.insertId, email, username }, // Cambiado de 'nombre'
+        data: { id: result.insertId, email, username }, 
       });
 
     } catch (error) {
@@ -97,10 +85,31 @@ router.post(
   }
 );
 
-/* Aquí irán las otras rutas de usuarios (GET, PUT, DELETE)
-  Esas SÍ usarán 'verificarAutenticacion'
-  Ejemplo:
-  router.get("/", verificarAutenticacion, async (req, res) => { ... });
-*/
+router.delete(
+  "/:id",
+  verificarAutenticacion,
+  validarId,
+  verificarValidaciones,
+  async (req, res) => {
+    const id = Number(req.params.id);
+
+    try {
+      const [result] = await db.execute("DELETE FROM usuarios WHERE id=?", [
+        id,
+      ]);
+
+      if (result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Usuario no encontrado" });
+      }
+      res.json({ success: true, message: "Usuario eliminado" });
+    } catch (error) {
+      console.error("Error en DELETE /usuarios/:id :", error);
+      res.status(500).json({ success: false, error: "Error interno" });
+    }
+  }
+);
+
 
 export default router;

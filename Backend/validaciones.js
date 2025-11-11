@@ -1,6 +1,6 @@
 import { param, validationResult } from "express-validator";
 
-// Middleware para validar el ID en las rutas (ej: /alumnos/5)
+// Middleware para validar el ID en las rutas 
 export const validarId = param("id").isInt({ min: 1 });
 
 // Middleware que verifica los resultados de las validaciones
@@ -13,5 +13,5 @@ export const verificarValidaciones = (req, res, next) => {
       errores: validacion.array(),
     });
   }
-  next(); // Si no hay errores, sigue al próximo middleware/handler
+  next();
 };

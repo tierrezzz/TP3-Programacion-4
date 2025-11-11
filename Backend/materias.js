@@ -12,7 +12,7 @@ const validacionesMateria = [
   body("año", "El año debe ser un número entero").isInt({ min: 1, max: 9 }),
 ];
 
-// POST /materias (Crear una materia)
+// POST /materias Crear una materia
 router.post(
   "/",
   verificarAutenticacion,
@@ -22,7 +22,7 @@ router.post(
     const { nombre, año } = req.body;
 
     try {
-      // Opcional: Verificar si ya existe una materia con ese nombre y año
+      //Verificar si ya existe una materia con ese nombre y año
       const [materias] = await db.execute(
         "SELECT * FROM materias WHERE nombre=? AND año=?",
         [nombre, año]
@@ -30,7 +30,7 @@ router.post(
       if (materias.length > 0) {
         return res
           .status(400)
-          .json({ success: false, error: "Esa materia ya está registrada" });
+          .json({ success: false, error: "Esa materia ya esta registrada" });
       }
 
       const [result] = await db.execute(
@@ -49,7 +49,7 @@ router.post(
   }
 );
 
-// GET /materias (Listar todas)
+// GET /materias Listar todas
 router.get("/", verificarAutenticacion, async (req, res) => {
   try {
     const [rows] = await db.execute("SELECT * FROM materias ORDER BY año, nombre");
@@ -60,7 +60,7 @@ router.get("/", verificarAutenticacion, async (req, res) => {
   }
 });
 
-// GET /materias/:id (Ver una materia)
+// GET /materias/:id Ver una materia
 router.get(
   "/:id",
   verificarAutenticacion,
@@ -88,7 +88,7 @@ router.get(
   }
 );
 
-// PUT /materias/:id (Actualizar una materia)
+// PUT /materias/:id Actualizar una materia
 router.put(
   "/:id",
   verificarAutenticacion,
@@ -121,7 +121,7 @@ router.put(
   }
 );
 
-// DELETE /materias/:id (Eliminar una materia)
+// DELETE /materias/:id Eliminar una materia
 router.delete(
   "/:id",
   verificarAutenticacion,
