@@ -1,12 +1,10 @@
 import express from "express";
 import cors from "cors";
 import { conectarDB } from "./db.js";
-import usuariosRouter from "./usuarios.js"; // Para el registro (POST /usuarios)
-import authRouter, { authConfig } from "./auth.js"; // Para el login (POST /auth/login)
-
-// --- Líneas de roles eliminadas ---
-// import rolesRouter from "./roles.js";
-// import usuariosRolesRouter from "./usuarios-roles.js";
+import usuariosRouter from "./usuarios.js"; 
+import authRouter, { authConfig } from "./auth.js"; 
+import materiasRouter from "./materias.js";
+import alumnosRouter from "./alumnos.js";
 
 // Conectar a la base de datos
 conectarDB();
@@ -15,13 +13,13 @@ const app = express();
 const port = 3000;
 
 // Middlewares
-app.use(express.json()); // Para interpretar body como JSON
-app.use(cors()); // Habilito CORS
+app.use(express.json());
+app.use(cors()); 
 
 // Configurar Passport (para auth.js)
 authConfig();
 
-// Ruta de bienvenida
+
 app.get("/", (req, res) => {
   res.send("API en funcionamiento!");
 });
@@ -29,12 +27,10 @@ app.get("/", (req, res) => {
 // Rutas de la API
 app.use("/usuarios", usuariosRouter);
 app.use("/auth", authRouter);
+app.use("/alumnos", alumnosRouter);
+app.use("/materias", materiasRouter);
 
-// --- Líneas de roles eliminadas ---
-// app.use("/roles", rolesRouter);
-// app.use("/usuarios-roles", usuariosRolesRouter);
-
-// Iniciar el servidor
+// Inicia el servidor
 app.listen(port, () => {
   console.log(`La aplicación esta funcionando en el puerto ${port}`);
 });

@@ -67,7 +67,7 @@ router.post(
         // 3. Generar el token JWT
         const payload = { userId: usuario.id };
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
-          expiresIn: "4h",
+          expiresIn: "5M",
         });
   
         // 4. Enviar respuesta
