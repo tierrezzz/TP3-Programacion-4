@@ -83,7 +83,7 @@ function Dashboard() {
     <>
       <Navbar />
       <main className="container">
-        <h1 style={{ marginTop: "20px" }}>Panel de Alumnos</h1>
+        <h1 style={{ marginTop: "20px" }}>Lista de Alumnos</h1>
 
         {/* --- Buscador --- */}
         <input
@@ -117,19 +117,7 @@ function Dashboard() {
                     {alumno.apellido}, {alumno.nombre}
                   </summary>
 
-                  {/* Esto se muestra solo si esta abierto/seleccionado */}
-                  <div>
-                    <p>
-                      <strong>DNI:</strong> {alumno.dni}
-                    </p>
-                    <Link
-                      to={`/alumnos/editar/${alumno.id}`}
-                      role="button"
-                      className="outline"
-                    >
-                      Modificar Datos
-                    </Link>
-                  </div>
+                 
                 </details>
               ))
             ) : (
