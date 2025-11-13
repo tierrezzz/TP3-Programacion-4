@@ -1,0 +1,53 @@
+@url = http://localhost:3000
+
+### Login de Usuario
+# @name login
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "juanxd@ejemplo.com",
+    "password": "hola1234"
+}
+
+###
+# Guarda el token de la respuesta de login
+@token = {{login.response.body.token}}
+
+### Consultar todos los alumnos (protegido)
+GET {{url}}/alumnos
+Authorization: Bearer {{token}}
+
+### Crear un nuevo alumno (protegido)
+# @name crearAlumno
+POST {{url}}/alumnos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "dni": "12345678"
+}
+
+###
+@alumnoId = {{crearAlumno.response.body.data.id}}
+
+### Consultar por un alumno (protegido)
+GET {{url}}/alumnos/{{alumnoId}}
+Authorization: Bearer {{token}}
+
+### Actualizar un alumno (protegido)
+PUT {{url}}/alumnos/{{alumnoId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nombre": "Juan Alberto",
+    "apellido": "Perez",
+    "dni": "12345679"
+}
+
+### Eliminar un alumno (protegido)
+DELETE {{url}}/alumnos/{{alumnoId}}
+Authorization: Bearer {{token}}

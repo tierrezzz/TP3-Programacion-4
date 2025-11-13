@@ -13,7 +13,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const API_URL = "http://localhost:3000"; 
+  const API_URL = "http://localhost:3000";
   const navigate = useNavigate();
 
   // Revisa si ya existe un token al cargar la app
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     checkAuth();
-  }, []); 
+  }, []);
 
   // Register: crea un nuevo usuario
   const register = async (username, email, password) => {
@@ -45,14 +45,14 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Si tiene exito, devolvemos los datos
-    return data; 
+    return data;
   };
 
   // Login: obtiene el token y guarda usuario
   const login = async (email, password) => {
     const res = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" }, 
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
     // Guardamos el token Y el username
     localStorage.setItem("token", data.token);
-    localStorage.setItem("username", data.username); 
+    localStorage.setItem("username", data.username);
 
     setUser({ username: data.username });
     return data;
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
-  // Peticion autenticada con fetch 
+  // Peticion autenticada con fetch
   const authFetch = async (url, options = {}) => {
     const token = localStorage.getItem("token");
     const headers = {
@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     if (options.body) {
-      headers['Content-Type'] = 'application/json';
+      headers["Content-Type"] = "application/json";
     }
 
     const res = await fetch(`${API_URL}${url}`, { ...options, headers });

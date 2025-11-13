@@ -6,7 +6,6 @@ import { AuthContext } from "./AuthContext";
 // Revisa si el usuario esta logueado.
 // Si no lo esta, lo lleva a la pagina de login.
 export default function PrivateRoute({ children }) {
-
   const { user, loading } = useContext(AuthContext);
 
   if (loading) return <p>Cargando...</p>;

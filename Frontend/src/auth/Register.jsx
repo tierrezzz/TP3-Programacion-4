@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 // --- Formulario de registro ---
 export default function Register() {
   // Usamos el 'register' que definimos en AuthContext
-  const { register } = useContext(AuthContext); 
+  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
@@ -19,10 +19,10 @@ export default function Register() {
   // Un manejador generico para todos los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (error) {
-        setError(null);
-      }
+      setError(null);
+    }
 
     setValues((prevValues) => ({
       ...prevValues,
@@ -35,13 +35,17 @@ export default function Register() {
     setError(null);
 
     try {
-        const result = await register(values.username, values.email, values.password);
+      const result = await register(
+        values.username,
+        values.email,
+        values.password
+      );
 
       if (result.error) {
         setError(result.error);
       } else {
         // Si el registro es exitoso, vamos al dashboard
-        navigate("/alumnos"); 
+        navigate("/alumnos");
       }
     } catch (err) {
       setError("Fallo la conexion con el servidor. Intenta de nuevo.");
@@ -51,7 +55,7 @@ export default function Register() {
   // Funcion para mostrar los errores de express-validator
   const getErrorMsg = (path) => {
     if (!error || !Array.isArray(error)) return null;
-    
+
     return error
       .filter((err) => err.path === path)
       .map((err) => err.msg)
@@ -63,7 +67,6 @@ export default function Register() {
       <article>
         <h2>Crear Cuenta</h2>
         <form onSubmit={handleSubmit}>
-          
           <label htmlFor="username">Nombre de usuario</label>
           <input
             type="text"
@@ -75,7 +78,7 @@ export default function Register() {
             aria-invalid={!!getErrorMsg("username")}
           />
           <small>{getErrorMsg("username")}</small>
-          
+
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -102,7 +105,7 @@ export default function Register() {
 
           <button type="submit">Crear cuenta</button>
 
-          {error && typeof error === 'string' && (
+          {error && typeof error === "string" && (
             <div role="alert">{error}</div>
           )}
         </form>

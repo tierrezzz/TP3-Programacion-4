@@ -1,0 +1,51 @@
+@url = http://localhost:3000
+
+### Login de Usuario
+# @name login
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "juanxd@ejemplo.com",
+    "password": "hola1234"
+}
+
+###
+# Guarda el token de la respuesta de login
+@token = {{login.response.body.token}}
+
+### Consultar todas las materias (protegido)
+GET {{url}}/materias
+Authorization: Bearer {{token}}
+
+### Crear una nueva materia (protegido)
+# @name crearMateria
+POST {{url}}/materias
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nombre": "Programacion IV",
+    "año": 3
+}
+
+###
+@materiaId = {{crearMateria.response.body.data.id}}
+
+### Consultar por una materia (protegido)
+GET {{url}}/materias/{{materiaId}}
+Authorization: Bearer {{token}}
+
+### Actualizar una materia (protegido)
+PUT {{url}}/materias/{{materiaId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nombre": "Programacion IV - Avanzada",
+    "año": 3
+}
+
+### Eliminar una materia (protegido)
+DELETE {{url}}/materias/{{materiaId}}
+Authorization: Bearer {{token}}
