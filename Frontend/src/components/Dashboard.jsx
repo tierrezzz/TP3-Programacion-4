@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../auth/AuthContext";
-import { Link } from "react-router-dom"; // Importa Link
 import Navbar from "./Navbar.jsx";
 
 function Dashboard() {
